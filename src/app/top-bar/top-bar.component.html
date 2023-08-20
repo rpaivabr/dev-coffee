@@ -1,0 +1,11 @@
+<div class="top-bar">
+  <nav class="container">
+    <a routerLink="/">Dev Coffee</a>
+    <a routerLink="/cart"
+      >Carrinho
+      <span *ngIf="cartTotalItems$ | async as cartItems"
+        >({{ cartItems }})</span
+      >
+    </a>
+  </nav>
+</div>

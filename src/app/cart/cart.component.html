@@ -1,0 +1,36 @@
+<h2>Carrinho</h2>
+
+<div class="cart">
+  <div class="cart-items">
+    <h3>Itens</h3>
+    <ng-container *ngIf="cartItems.length; else noItems">
+      <div *ngFor="let item of cartItems">
+        {{ item.name }}
+        {{ item.price | currency }}
+      </div>
+    </ng-container>
+    <ng-template #noItems>
+      <div>Carrinho vazio</div>
+    </ng-template>
+    <br />
+    <p><strong>Total:</strong> {{ total | currency }}</p>
+  </div>
+
+  <div class="adress-form">
+    <h3>Endereço de Entrega</h3>
+
+    <form [formGroup]="addressForm">
+      <label for="zipcode">CEP</label>
+      <input id="zipcode" formControlName="zipcode" maxlength="8" />
+      <br />
+
+      <label for="street">Rua</label>
+      <input id="street" formControlName="street" />
+      <br />
+
+      <button [disabled]="!addressForm.valid" (click)="submitForm()">
+        Finalizar Compra
+      </button>
+    </form>
+  </div>
+</div>

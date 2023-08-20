@@ -1,0 +1,7 @@
+<h2>Cardápio</h2>
+
+<app-product-card
+  *ngFor="let product of products$ | async"
+  [product]="product"
+  (select)="navigateToDetail(product.id)"
+/>
