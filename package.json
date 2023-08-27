@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "api:fake": "json-server --watch src/db.json"
+    "api:mock": "json-server --watch src/db.json"
   },
   "private": true,
   "dependencies": {

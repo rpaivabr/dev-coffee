@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { CartService } from '../services/cart.service';
-import { Product } from '../products';
 import { FormBuilder, Validators } from '@angular/forms';
-import { Address } from '../order';
 import { Router } from '@angular/router';
+import { Address } from 'src/app/models/order';
+import { Product } from 'src/app/models/products';
+import { CartService } from 'src/app/services/cart.service';
 
 @Component({
   selector: 'app-cart',

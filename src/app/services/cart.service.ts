@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Product } from '../products';
-import { Address, Order } from '../order';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { Product } from '../models/products';
+import { Address, Order } from '../models/order';
 
-const ordersUrl = 'http://localhost:3000/orders';
+const URL = `${environment.apiUrl}/orders`;
 
 @Injectable({
   providedIn: 'root',
@@ -30,7 +31,7 @@ export class CartService {
       items: this.items,
       address,
     };
-    this.http.post(ordersUrl, order).subscribe(() => {
+    this.http.post(URL, order).subscribe(() => {
       window.alert('Pedido finalizado com sucesso!');
       this.clearItems();
     });

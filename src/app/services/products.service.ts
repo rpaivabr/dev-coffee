@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Product } from '../products';
 import { Observable } from 'rxjs';
+import { Product } from '../models/products';
+import { environment } from 'src/environments/environment';
 
-const productsUrl = 'http://localhost:3000/products';
+const URL = `${environment.apiUrl}/products`;
 
 @Injectable({
   providedIn: 'root',
@@ -12,10 +13,10 @@ export class ProductsService {
   constructor(private http: HttpClient) {}
 
   listProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>(productsUrl);
+    return this.http.get<Product[]>(URL);
   }
 
   getProductById(productId: number): Observable<Product> {
-    return this.http.get<Product>(`${productsUrl}/${productId}`);
+    return this.http.get<Product>(`${URL}/${productId}`);
   }
 }
