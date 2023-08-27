@@ -1,34 +1,37 @@
-import { Injectable } from '@angular/core';
+import { Injectable, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Product } from '../models/products';
 import { Address, Order } from '../models/order';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 const URL = `${environment.apiUrl}/orders`;
+
+export interface AddressForm {
+  zipcode: FormControl<string>;
+  street: FormControl<string>;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class CartService {
-  private items: Product[] = [];
-  private cartTotalItems = new BehaviorSubject(0);
-  cartTotalItems$ = this.cartTotalItems.asObservable();
-
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
+  private items = signal<Product[]>([]);
+  cartItems = this.items.asReadonly();
+  cartTotalItems = computed(() => this.items().length);
 
   getItems(): Product[] {
-    return this.items;
+    return this.items();
   }
 
   addToCart(product: Product): void {
-    this.items.push(product);
-    this.cartTotalItems.next(this.items.length);
+    this.items.mutate((items) => items.push(product));
   }
 
   createOrder(address: Address): void {
     const order: Order = {
-      items: this.items,
+      items: this.items(),
       address,
     };
     this.http.post(URL, order).subscribe(() => {
@@ -37,8 +40,20 @@ export class CartService {
     });
   }
 
+  createAddressForm(): FormGroup<AddressForm> {
+    return new FormGroup<AddressForm>({
+      zipcode: new FormControl<string>('', {
+        nonNullable: true,
+        validators: [Validators.required, Validators.minLength(8)],
+      }),
+      street: new FormControl<string>('', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+    });
+  }
+
   private clearItems() {
-    this.items = [];
-    this.cartTotalItems.next(this.items.length);
+    this.items.update(() => []);
   }
 }

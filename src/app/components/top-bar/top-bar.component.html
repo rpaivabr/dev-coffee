@@ -3,9 +3,7 @@
     <a routerLink="/">Dev Coffee</a>
     <a routerLink="/cart"
       >Carrinho
-      <span *ngIf="cartTotalItems$ | async as cartItems"
-        >({{ cartItems }})</span
-      >
+      <span *ngIf="cartTotalItems() as cartItems">({{ cartItems }})</span>
     </a>
   </nav>
 </div>
