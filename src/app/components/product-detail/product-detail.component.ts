@@ -1,4 +1,12 @@
-import { Component, inject } from '@angular/core';
+import {
+  Component,
+  Injector,
+  Input,
+  OnInit,
+  Signal,
+  inject,
+  runInInjectionContext,
+} from '@angular/core';
 import { switchMap, tap } from 'rxjs';
 import { Product } from 'src/app/models/products';
 import { CartService } from 'src/app/services/cart.service';
@@ -15,17 +23,20 @@ import { ActivatedRoute } from '@angular/router';
   standalone: true,
   imports: [NgIf, MatButtonModule, AsyncPipe, CurrencyPipe],
 })
-export class ProductDetailComponent {
-  private route = inject(ActivatedRoute);
+export class ProductDetailComponent implements OnInit {
+  @Input() productId?: string;
+  private injector = inject(Injector);
   private productsService = inject(ProductsService);
   private cartService = inject(CartService);
-  product = toSignal(
-    this.route.params.pipe(
-      switchMap(({ productId }) =>
-        this.productsService.getProductById(productId)
-      )
-    )
-  );
+  product!: Signal<Product | undefined>;
+
+  ngOnInit(): void {
+    runInInjectionContext(this.injector, () => {
+      this.product = toSignal(
+        this.productsService.getProductById(this.productId!)
+      );
+    });
+  }
 
   addToCart(product: Product): void {
     this.cartService.addToCart(product);
